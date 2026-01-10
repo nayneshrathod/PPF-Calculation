@@ -46,150 +46,171 @@
     </header>
 
     <!-- Sidebar / Controls -->
+    <!-- Sidebar / Controls -->
     <aside [class.translate-x-0]="isMobileSidebarOpen" [class.-translate-x-full]="!isMobileSidebarOpen"
-        class="fixed lg:sticky top-0 left-0 w-full sm:w-96 lg:w-96 bg-white dark:bg-slate-900 shadow-xl z-40 flex flex-col h-screen overflow-y-auto border-r border-slate-200 dark:border-slate-700 no-print transition-all duration-300 ease-in-out lg:translate-x-0"
-        [attr.aria-hidden]="!isMobileSidebarOpen && 'true'">
-        <div class="p-4 bg-slate-900 dark:bg-slate-950 text-white shadow-lg relative overflow-hidden transition-colors">
+        [class.lg:w-80]="isDesktopSidebarOpen" [class.lg:w-0]="!isDesktopSidebarOpen"
+        class="fixed lg:sticky top-0 left-0 w-full sm:w-80 bg-white dark:bg-slate-900 shadow-xl z-40 flex flex-col h-screen overflow-y-auto border-r border-slate-200 dark:border-slate-700 no-print transition-all duration-300 ease-in-out lg:translate-x-0"
+        [attr.aria-hidden]="(!isMobileSidebarOpen && 'true') || (!isDesktopSidebarOpen && 'true')">
+
+        <!-- Sidebar Content Container (to handle width transition cleanly) -->
+        <div class="flex flex-col h-full w-full sm:w-80"
+            [class.hidden]="!isDesktopSidebarOpen && !isMobileSidebarOpen && 'lg:hidden'">
+
             <div
-                class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none">
-            </div>
-            <div class="flex items-start justify-between relative z-10">
-                <div class="flex-1">
-                    <h1
-                        class="text-lg font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                        PPF Calculator
-                    </h1>
-                    <p class="text-slate-400 dark:text-slate-500 text-[10px] mt-0.5">Govt. Rules Compliant (7.1%)</p>
-                </div>
-                <!-- Theme Toggle (Desktop) -->
-                <button (click)="themeService.toggleTheme()"
-                    class="hidden lg:flex btn-touch bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-white rounded-lg p-2 transition-all ml-2"
-                    [attr.aria-label]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
-                    @if (themeService.theme() === 'dark') {
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    } @else {
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                    </svg>
-                    }
-                </button>
-            </div>
-        </div>
-
-        <div class="p-4 space-y-4 flex-1">
-
-            <!-- Basics -->
-            <div class="space-y-3">
-                <label
-                    class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Investment
-                    Plan</label>
-
-                <div class="space-y-2">
-                    <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Starting Amount
-                        (Monthly)</label>
-                    <div class="relative group">
-                        <span
-                            class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 font-bold">₹</span>
-                        <input type="number" [ngModel]="startAmount" (input)="onAmountInput($event)" (blur)="onBlur()"
-                            (keydown.enter)="onBlur()" min="500" max="12500"
-                            class="w-full pl-8 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600 transition-all font-semibold text-slate-700 dark:text-slate-200">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="space-y-1">
-                        <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Start Month</label>
-                        <select [(ngModel)]="startMonth" (ngModelChange)="calculate()"
-                            class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-200">
-                            <option *ngFor="let m of months" [value]="m.val">{{ m.name | slice:0:3 }}</option>
-                        </select>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Start Year</label>
-                        <select [(ngModel)]="startYear" (ngModelChange)="calculate()"
-                            class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-200">
-                            <option *ngFor="let y of years" [value]="y">{{ y }}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="space-y-1">
-                    <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Total Duration (Years)</label>
-                    <input type="number" [(ngModel)]="durationYears" (ngModelChange)="updateDuration()"
-                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-semibold text-slate-700 dark:text-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600">
-                </div>
-            </div>
-
-            <!-- Step Up Config -->
-            <div class="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-700">
-                <label
-                    class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Step-Up
-                    Logic</label>
-
+                class="p-4 bg-slate-900 dark:bg-slate-950 text-white shadow-lg relative overflow-hidden transition-colors shrink-0">
                 <div
-                    class="bg-indigo-50/50 dark:bg-indigo-950/30 p-3 rounded-xl border border-indigo-100 dark:border-indigo-900 space-y-3">
+                    class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none">
+                </div>
+                <div class="flex items-start justify-between relative z-10">
+                    <div class="flex-1">
+                        <h1
+                            class="text-lg font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                            PPF Calculator
+                        </h1>
+                        <p class="text-slate-400 dark:text-slate-500 text-[10px] mt-0.5">Govt. Rules Compliant (7.1%)
+                        </p>
+                    </div>
+                    <!-- Theme Toggle (Desktop) -->
+                    <button (click)="themeService.toggleTheme()"
+                        class="hidden lg:flex btn-touch bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-white rounded-lg p-2 transition-all ml-2"
+                        [attr.aria-label]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+                        @if (themeService.theme() === 'dark') {
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        } @else {
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                        }
+                    </button>
+                    <!-- Desktop Collapse Button -->
+                    <button (click)="toggleDesktopSidebar()"
+                        class="hidden lg:flex btn-touch bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-white rounded-lg p-2 transition-all ml-2"
+                        aria-label="Collapse Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 space-y-4 flex-1">
+
+                <!-- Basics -->
+                <div class="space-y-3">
+                    <label
+                        class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Investment
+                        Plan</label>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Starting Amount
+                            (Monthly)</label>
+                        <div class="relative group">
+                            <span
+                                class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 font-bold">₹</span>
+                            <input type="number" [ngModel]="startAmount" (input)="onAmountInput($event)"
+                                (blur)="onBlur()" (keydown.enter)="onBlur()" min="500" max="12500"
+                                class="w-full pl-8 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600 transition-all font-semibold text-slate-700 dark:text-slate-200">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Start Month</label>
+                            <select [(ngModel)]="startMonth" (ngModelChange)="calculate()"
+                                class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-200">
+                                <option *ngFor="let m of months" [value]="m.val">{{ m.name | slice:0:3 }}</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Start Year</label>
+                            <select [(ngModel)]="startYear" (ngModelChange)="calculate()"
+                                class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-200">
+                                <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="space-y-1">
-                        <label class="text-xs font-medium text-indigo-900 dark:text-indigo-300">Step-Up
-                            Percentage</label>
-                        <select [(ngModel)]="stepUpPercent" (ngModelChange)="calculate()"
-                            class="w-full p-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-800 rounded-lg text-sm font-bold text-indigo-700 dark:text-indigo-400">
-                            <option [value]="0">0% (Flat)</option>
-                            <option *ngFor="let p of stepUpOptions" [value]="p">{{ p }}%</option>
-                        </select>
-                    </div>
-
-                    <div class="space-y-1" *ngIf="stepUpPercent > 0">
-                        <label class="text-xs font-medium text-indigo-900 dark:text-indigo-300">Frequency</label>
-                        <select [(ngModel)]="stepUpFrequencyMonths" (ngModelChange)="calculate()"
-                            class="w-full p-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-800 rounded-lg text-xs font-bold text-indigo-700 dark:text-indigo-400">
-                            <option *ngFor="let opt of stepUpFrequencyOptions" [value]="opt.val">
-                                {{ opt.label }}
-                            </option>
-                        </select>
+                        <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Total Duration
+                            (Years)</label>
+                        <input type="number" [(ngModel)]="durationYears" (ngModelChange)="updateDuration()"
+                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-semibold text-slate-700 dark:text-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600">
                     </div>
                 </div>
-                <!-- User requested specific note -->
-                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2">
-                    Min: <b>₹500</b> | Max: <b>₹12,500</b> (Monthly)
-                </p>
-            </div>
 
-            <!-- Export Actions -->
-            <div class="pt-4 mt-auto space-y-3">
-                <div class="grid grid-cols-2 gap-2 sm:gap-3">
-                    <button (click)="openPrintPreview(); toggleMobileSidebar()"
-                        class="btn-touch px-3 py-3 sm:py-2 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 rounded-lg text-slate-600 text-xs sm:text-sm font-bold transition-colors flex items-center justify-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                        </svg>
-                        <span class="hidden sm:inline">Print</span>
-                    </button>
-                    <button (click)="downloadExcel(); toggleMobileSidebar()"
-                        class="btn-touch px-3 py-3 sm:py-2 bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 rounded-lg text-emerald-700 text-xs sm:text-sm font-bold transition-colors flex items-center justify-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span class="hidden sm:inline">Excel</span>
-                    </button>
+                <!-- Step Up Config -->
+                <div class="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-700">
+                    <label
+                        class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Step-Up
+                        Logic</label>
+
+                    <div
+                        class="bg-indigo-50/50 dark:bg-indigo-950/30 p-3 rounded-xl border border-indigo-100 dark:border-indigo-900 space-y-3">
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-indigo-900 dark:text-indigo-300">Step-Up
+                                Percentage</label>
+                            <select [(ngModel)]="stepUpPercent" (ngModelChange)="calculate()"
+                                class="w-full p-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-800 rounded-lg text-sm font-bold text-indigo-700 dark:text-indigo-400">
+                                <option [value]="0">0% (Flat)</option>
+                                <option *ngFor="let p of stepUpOptions" [value]="p">{{ p }}%</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-1" *ngIf="stepUpPercent > 0">
+                            <label class="text-xs font-medium text-indigo-900 dark:text-indigo-300">Frequency</label>
+                            <select [(ngModel)]="stepUpFrequencyMonths" (ngModelChange)="calculate()"
+                                class="w-full p-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-800 rounded-lg text-xs font-bold text-indigo-700 dark:text-indigo-400">
+                                <option *ngFor="let opt of stepUpFrequencyOptions" [value]="opt.val">
+                                    {{ opt.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- User requested specific note -->
+                    <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2">
+                        Min: <b>₹500</b> | Max: <b>₹12,500</b> (Monthly)
+                    </p>
                 </div>
 
-                <!-- Close button for mobile -->
-                <button (click)="toggleMobileSidebar()"
-                    class="lg:hidden w-full btn-touch py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-bold transition-colors">
-                    Close & View Results
-                </button>
+                <!-- Export Actions -->
+                <div class="pt-4 mt-auto space-y-3">
+                    <div class="grid grid-cols-2 gap-2 sm:gap-3">
+                        <button (click)="openPrintPreview(); toggleMobileSidebar()"
+                            class="btn-touch px-3 py-3 sm:py-2 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 rounded-lg text-slate-600 text-xs sm:text-sm font-bold transition-colors flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                            </svg>
+                            <span class="hidden sm:inline">Print</span>
+                        </button>
+                        <button (click)="downloadExcel(); toggleMobileSidebar()"
+                            class="btn-touch px-3 py-3 sm:py-2 bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 rounded-lg text-emerald-700 text-xs sm:text-sm font-bold transition-colors flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span class="hidden sm:inline">Excel</span>
+                        </button>
+                    </div>
+
+                    <!-- Close button for mobile -->
+                    <button (click)="toggleMobileSidebar()"
+                        class="lg:hidden w-full btn-touch py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-bold transition-colors">
+                        Close & View Results
+                    </button>
+                </div>
             </div>
-        </div>
+        </div><!-- End Sidebar Wrapper -->
     </aside>
 
     <!-- Main Dashboard -->
@@ -197,6 +218,16 @@
         class="flex-1 overflow-hidden relative flex flex-col min-h-screen lg:h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
         <div class="flex-1 overflow-y-auto p-2 sm:p-3 lg:p-4 scroll-smooth safe-area-bottom">
             <div class="max-w-7xl mx-auto space-y-2 sm:space-y-3">
+                <!-- Desktop Open Sidebar Trigger -->
+                <button (click)="toggleDesktopSidebar()" [class.hidden]="isDesktopSidebarOpen || isMobileSidebarOpen"
+                    class="hidden lg:flex w-fit items-center gap-2 px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 rounded-lg shadow-sm text-xs font-semibold hover:text-emerald-500 hover:border-emerald-200 transition-all mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                    <span>Show Inputs</span>
+                </button>
 
                 <!-- Summary Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">

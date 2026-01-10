@@ -54,6 +54,7 @@ export class Calculator {
 
   // Mobile Sidebar State
   isMobileSidebarOpen: boolean = false;
+  isDesktopSidebarOpen: boolean = true; // Default open on desktop
 
   get stepUpFrequencyOptions() {
     const maxMonths = this.durationYears * 12;
@@ -126,6 +127,10 @@ export class Calculator {
 
   toggleMobileSidebar() {
     this.isMobileSidebarOpen = !this.isMobileSidebarOpen;
+  }
+
+  toggleDesktopSidebar() {
+    this.isDesktopSidebarOpen = !this.isDesktopSidebarOpen;
   }
 
   calculate() {
