@@ -2,4 +2,480 @@
 @tailwind components;
 @tailwind utilities;
 
-/* You can add global styles to this file, and also import other style files */
+/* ============================================
+   CUSTOM CSS PROPERTIES & DESIGN TOKENS
+   ============================================ */
+@layer base {
+    :root {
+        /* Colors */
+        --primary: #0f172a;
+        --primary-light: #1e293b;
+        --secondary: #10b981;
+        --accent: #06b6d4;
+        --background: #f8fafc;
+        --surface: #ffffff;
+        --error: #ef4444;
+        --warning: #f59e0b;
+        --success: #10b981;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        --border: #e2e8f0;
+
+        /* Spacing - Mobile First */
+        --spacing-xs: 0.25rem;
+        /* 4px */
+        --spacing-sm: 0.5rem;
+        /* 8px */
+        --spacing-md: 1rem;
+        /* 16px */
+        --spacing-lg: 1.5rem;
+        /* 24px */
+        --spacing-xl: 2rem;
+        /* 32px */
+        --spacing-2xl: 3rem;
+        /* 48px */
+
+        /* Typography Scale */
+        --text-xs: 0.75rem;
+        /* 12px */
+        --text-sm: 0.875rem;
+        /* 14px */
+        --text-base: 1rem;
+        /* 16px */
+        --text-lg: 1.125rem;
+        /* 18px */
+        --text-xl: 1.25rem;
+        /* 20px */
+        --text-2xl: 1.5rem;
+        /* 24px */
+        --text-3xl: 1.875rem;
+        /* 30px */
+
+        /* Border Radius */
+        --radius-sm: 0.375rem;
+        /* 6px */
+        --radius-md: 0.5rem;
+        /* 8px */
+        --radius-lg: 0.75rem;
+        /* 12px */
+        --radius-xl: 1rem;
+        /* 16px */
+        --radius-2xl: 1.5rem;
+        /* 24px */
+
+        /* Shadows - Optimized for mobile */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+        /* Transitions */
+        --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+        /* Touch Target Sizes (iOS & Android Guidelines) */
+        --touch-target-min: 44px;
+        /* iOS minimum */
+        --touch-target-comfortable: 48px;
+        /* Material Design */
+    }
+
+    /* Dark Mode Support (Optional) */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --background: #0f172a;
+            --surface: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+        }
+    }
+}
+
+/* ============================================
+   BASE RESETS & MOBILE OPTIMIZATIONS
+   ============================================ */
+@layer base {
+    * {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        -webkit-touch-callout: none;
+    }
+
+    html {
+        font-size: 16px;
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+            sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: var(--background);
+        color: var(--text-primary);
+        overscroll-behavior: none;
+        position: relative;
+    }
+
+    /* Touch-friendly input styles */
+    input,
+    select,
+    textarea,
+    button {
+        font-size: 16px;
+        /* Prevents zoom on iOS */
+        min-height: var(--touch-target-min);
+    }
+
+    button {
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    /* Improve number input on mobile */
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Smooth scrolling containers */
+    .scroll-smooth {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+@layer components {
+
+    /* Container with responsive padding */
+    .container-responsive {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: var(--spacing-md);
+        padding-right: var(--spacing-md);
+    }
+
+    @media (min-width: 640px) {
+        .container-responsive {
+            padding-left: var(--spacing-lg);
+            padding-right: var(--spacing-lg);
+            max-width: 640px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .container-responsive {
+            padding-left: var(--spacing-xl);
+            padding-right: var(--spacing-xl);
+            max-width: 768px;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .container-responsive {
+            max-width: 1024px;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .container-responsive {
+            max-width: 1280px;
+        }
+    }
+
+    @media (min-width: 1536px) {
+        .container-responsive {
+            max-width: 1536px;
+        }
+    }
+
+    /* Touch-friendly buttons */
+    .btn-touch {
+        min-height: var(--touch-target-comfortable);
+        min-width: var(--touch-target-comfortable);
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: var(--radius-lg);
+        font-weight: 600;
+        transition: all var(--transition-base);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--spacing-sm);
+    }
+
+    .btn-touch:active {
+        transform: scale(0.97);
+    }
+
+    /* Card component - responsive */
+    .card-responsive {
+        background: var(--surface);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-md);
+        box-shadow: var(--shadow-sm);
+        transition: box-shadow var(--transition-base);
+    }
+
+    @media (min-width: 768px) {
+        .card-responsive {
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+        }
+    }
+
+    .card-responsive:hover {
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Sticky header for mobile */
+    .sticky-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* Bottom sheet style for mobile actions */
+    .bottom-sheet {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-top-left-radius: var(--radius-2xl);
+        border-top-right-radius: var(--radius-2xl);
+        box-shadow: var(--shadow-xl);
+        z-index: 100;
+        transform: translateY(100%);
+        transition: transform var(--transition-slow);
+    }
+
+    .bottom-sheet.active {
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   MOBILE-SPECIFIC UTILITIES
+   ============================================ */
+@layer utilities {
+
+    /* Hide on mobile */
+    .mobile-hide {
+        display: none;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-hide {
+            display: block;
+        }
+    }
+
+    /* Show only on mobile */
+    .mobile-only {
+        display: block;
+    }
+
+    @media (min-width: 768px) {
+        .mobile-only {
+            display: none;
+        }
+    }
+
+    /* Tablet breakpoint utilities */
+    .tablet-hide {
+        display: block;
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .tablet-hide {
+            display: none;
+        }
+    }
+
+    /* Safe area insets for notched devices */
+    .safe-area-top {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .safe-area-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .safe-area-left {
+        padding-left: env(safe-area-inset-left);
+    }
+
+    .safe-area-right {
+        padding-right: env(safe-area-inset-right);
+    }
+
+    /* Responsive text sizes */
+    .text-responsive {
+        font-size: var(--text-sm);
+    }
+
+    @media (min-width: 640px) {
+        .text-responsive {
+            font-size: var(--text-base);
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .text-responsive {
+            font-size: var(--text-lg);
+        }
+    }
+
+    /* Responsive spacing */
+    .space-y-responsive>*+* {
+        margin-top: var(--spacing-md);
+    }
+
+    @media (min-width: 768px) {
+        .space-y-responsive>*+* {
+            margin-top: var(--spacing-lg);
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .space-y-responsive>*+* {
+            margin-top: var(--spacing-xl);
+        }
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY IMPROVEMENTS
+   ============================================ */
+@layer base {
+
+    /* Focus visible for keyboard navigation */
+    :focus-visible {
+        outline: 2px solid var(--secondary);
+        outline-offset: 2px;
+        border-radius: var(--radius-sm);
+    }
+
+    /* Reduce motion for users who prefer it */
+    @media (prefers-reduced-motion: reduce) {
+
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        * {
+            border-color: currentColor;
+        }
+    }
+}
+
+/* ============================================
+   LOADING STATES & SKELETONS
+   ============================================ */
+@layer components {
+    .skeleton {
+        background: linear-gradient(90deg,
+                #f0f0f0 25%,
+                #e0e0e0 50%,
+                #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s ease-in-out infinite;
+    }
+
+    @keyframes loading {
+        0% {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    .spinner {
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-top-color: var(--secondary);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR (Desktop only)
+   ============================================ */
+@media (min-width: 1024px) {
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--background);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: var(--radius-md);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted);
+    }
+}

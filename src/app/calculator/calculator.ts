@@ -50,6 +50,9 @@ export class Calculator {
   years: number[] = [];
   stepUpOptions = Array.from({ length: 100 }, (_, i) => i + 1); // 1-100%
 
+  // Mobile Sidebar State
+  isMobileSidebarOpen: boolean = false;
+
   get stepUpFrequencyOptions() {
     const maxMonths = this.durationYears * 12;
     const options = [];
@@ -117,6 +120,10 @@ export class Calculator {
       this.startAmount = 12500;
     }
     this.calculate();
+  }
+
+  toggleMobileSidebar() {
+    this.isMobileSidebarOpen = !this.isMobileSidebarOpen;
   }
 
   calculate() {

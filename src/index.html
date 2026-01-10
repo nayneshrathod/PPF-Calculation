@@ -1,13 +1,48 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <title>InvestmentCalculator</title>
+  <title>PPF Investment Calculator - Govt. Compliant</title>
   <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Mobile Optimized Viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+
+  <!-- PWA Meta Tags -->
+  <meta name="description"
+    content="Government-compliant PPF Calculator with step-up investment features. Track your Public Provident Fund growth over time.">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PPF Calculator">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- Icons -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/icon-192x192.png">
+
+  <!-- Performance & SEO -->
+  <meta name="format-detection" content="telephone=no">
+  <meta name="author" content="PPF Calculator">
+  <meta name="keywords" content="PPF, calculator, investment, public provident fund, savings, government scheme">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PPF Investment Calculator">
+  <meta property="og:description" content="Calculate your PPF returns with step-up investment features">
+  <meta property="og:image" content="/assets/icons/icon-512x512.png">
+
+  <!-- Preconnect for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 </head>
-<body>
+
+<body class="antialiased">
   <app-root></app-root>
+
+  <!-- PWA Installation Prompt (will be handled by service worker) -->
+  <noscript>Please enable JavaScript to continue using this application.</noscript>
 </body>
+
 </html>

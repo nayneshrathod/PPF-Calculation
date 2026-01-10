@@ -1,8 +1,30 @@
-<div class="flex flex-col lg:flex-row min-h-screen bg-slate-50 font-sans">
+<div class="flex flex-col min-h-screen bg-slate-50 font-sans">
+
+    <!-- Mobile Header (visible only on mobile) -->
+    <header class="lg:hidden sticky-header safe-area-top z-50 bg-slate-900 text-white">
+        <div class="flex items-center justify-between p-4">
+            <div class="flex-1">
+                <h1
+                    class="text-base font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                    PPF Calculator
+                </h1>
+                <p class="text-xs text-slate-400 mt-0.5">Govt. Rules (7.1%)</p>
+            </div>
+            <button (click)="toggleMobileSidebar()" class="btn-touch bg-slate-800 text-white rounded-lg p-2"
+                aria-label="Toggle calculator inputs">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
+            </button>
+        </div>
+    </header>
 
     <!-- Sidebar / Controls -->
-    <aside
-        class="w-full lg:w-96 bg-white shadow-xl z-20 flex flex-col h-auto lg:h-screen sticky top-0 overflow-y-auto border-r border-slate-200 no-print">
+    <aside [class.translate-x-0]="isMobileSidebarOpen" [class.-translate-x-full]="!isMobileSidebarOpen"
+        class="fixed lg:sticky top-0 left-0 w-full sm:w-96 lg:w-96 bg-white shadow-xl z-40 flex flex-col h-screen overflow-y-auto border-r border-slate-200 no-print transition-transform duration-300 ease-in-out lg:translate-x-0"
+        [attr.aria-hidden]="!isMobileSidebarOpen && 'true'">
         <div class="p-6 bg-slate-900 text-white shadow-lg relative overflow-hidden">
             <div
                 class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none">
@@ -85,60 +107,72 @@
             </div>
 
             <!-- Export Actions -->
-            <div class="pt-4 mt-auto grid grid-cols-2 gap-2">
-                <button (click)="openPrintPreview()"
-                    class="px-3 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-600 text-xs font-bold transition-colors flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                    </svg>
-                    Print
-                </button>
-                <button (click)="downloadExcel()"
-                    class="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 rounded-lg text-emerald-700 text-xs font-bold transition-colors flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Excel
+            <div class="pt-4 mt-auto space-y-3">
+                <div class="grid grid-cols-2 gap-2 sm:gap-3">
+                    <button (click)="openPrintPreview(); toggleMobileSidebar()"
+                        class="btn-touch px-3 py-3 sm:py-2 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 rounded-lg text-slate-600 text-xs sm:text-sm font-bold transition-colors flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                        </svg>
+                        <span class="hidden sm:inline">Print</span>
+                    </button>
+                    <button (click)="downloadExcel(); toggleMobileSidebar()"
+                        class="btn-touch px-3 py-3 sm:py-2 bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 rounded-lg text-emerald-700 text-xs sm:text-sm font-bold transition-colors flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span class="hidden sm:inline">Excel</span>
+                    </button>
+                </div>
+
+                <!-- Close button for mobile -->
+                <button (click)="toggleMobileSidebar()"
+                    class="lg:hidden w-full btn-touch py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-bold transition-colors">
+                    Close & View Results
                 </button>
             </div>
         </div>
     </aside>
 
     <!-- Main Dashboard -->
-    <main class="flex-1 overflow-hidden relative flex flex-col h-screen bg-slate-50">
-        <div class="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
-            <div class="max-w-7xl mx-auto space-y-6">
+    <main class="flex-1 overflow-hidden relative flex flex-col min-h-screen lg:h-screen bg-slate-50">
+        <div class="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-8 scroll-smooth safe-area-bottom">
+            <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6">
 
                 <!-- Summary Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                     <div
-                        class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:border-emerald-200 transition-all">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wide relative">Total Invested
+                        class="card-responsive bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:border-emerald-200 transition-all">
+                        <h3 class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide relative">
+                            Total Invested
                         </h3>
-                        <p class="text-2xl font-bold text-slate-800 mt-2 relative font-mono">
+                        <p class="text-xl sm:text-2xl font-bold text-slate-800 mt-1 sm:mt-2 relative font-mono">
                             {{ totalInvested | currency:'INR':'symbol':'1.0-0' }}
                         </p>
                     </div>
                     <div
-                        class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:border-emerald-200 transition-all">
-                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wide relative">Total Interest
+                        class="card-responsive bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:border-emerald-200 transition-all">
+                        <h3 class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide relative">
+                            Total Interest
                         </h3>
-                        <p class="text-2xl font-bold text-emerald-600 mt-2 relative font-mono">
+                        <p class="text-xl sm:text-2xl font-bold text-emerald-600 mt-1 sm:mt-2 relative font-mono">
                             +{{ totalInterest | currency:'INR':'symbol':'1.0-0' }}
                         </p>
                     </div>
                     <div
-                        class="bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-2xl shadow-lg text-white relative overflow-hidden">
-                        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wide relative">Final Maturity
+                        class="card-responsive bg-gradient-to-br from-slate-900 to-slate-800 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg text-white relative overflow-hidden sm:col-span-2 md:col-span-1">
+                        <h3 class="text-[10px] sm:text-xs font-bold text-slate-300 uppercase tracking-wide relative">
+                            Final Maturity
                             Value</h3>
-                        <p class="text-3xl font-bold text-white mt-2 relative font-mono tracking-tight">
+                        <p
+                            class="text-2xl sm:text-3xl font-bold text-white mt-1 sm:mt-2 relative font-mono tracking-tight">
                             {{ finalMaturity | currency:'INR':'symbol':'1.0-0' }}
                         </p>
-                        <p class="text-[10px] text-slate-400 mt-2 relative">after {{ durationYears }} years</p>
+                        <p class="text-[10px] text-slate-400 mt-1 sm:mt-2 relative">after {{ durationYears }} years</p>
                     </div>
                 </div>
 
@@ -200,38 +234,90 @@
 
                 <!-- Projection Table -->
                 <div
-                    class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[600px]">
-                    <div class="px-6 py-4 border-b border-slate-200 bg-white flex justify-between items-center">
+                    class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col min-h-[400px] sm:h-[600px]">
+                    <!-- Header -->
+                    <div
+                        class="px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                         <div>
-                            <h3 class="text-lg font-bold text-slate-800">Projection Table</h3>
+                            <h3 class="text-base sm:text-lg font-bold text-slate-800">Projection Table</h3>
+                            <p class="text-xs text-slate-500 mt-0.5 sm:hidden">Swipe for more details</p>
                         </div>
                         <div
-                            class="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-full border border-amber-100">
-                            ₹1.5L Limit Apply
+                            class="px-2 sm:px-3 py-1 bg-amber-50 text-amber-700 text-[10px] sm:text-xs font-bold rounded-full border border-amber-100">
+                            ₹1.5L Annual Limit
                         </div>
                     </div>
+
+                    <!-- Desktop Table Header (hidden on mobile) -->
                     <div
-                        class="grid grid-cols-12 gap-4 px-6 py-3 bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                        class="hidden md:grid grid-cols-12 gap-4 px-4 sm:px-6 py-3 bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
                         <div class="col-span-2">Period</div>
                         <div class="col-span-2 text-right">Monthly Inst.</div>
                         <div class="col-span-3 text-right">Period Deposit</div>
                         <div class="col-span-2 text-right">Interest</div>
                         <div class="col-span-3 text-right">Closing Balance</div>
                     </div>
-                    <div class="overflow-y-auto flex-1 p-0">
-                        <div *ngFor="let row of masterTable"
-                            class="grid grid-cols-12 gap-4 px-6 py-3 border-b border-slate-50 text-xs md:text-sm items-center hover:bg-slate-50"
-                            [ngClass]="{'bg-amber-50/40': row.isCapped}">
-                            <div class="col-span-2 font-medium text-slate-700">{{ row.periodLabel }}</div>
-                            <div class="col-span-2 text-right font-mono text-slate-600">{{ row.monthlyInstallment |
-                                currency:'INR':'symbol':'1.0-0' }}</div>
-                            <div class="col-span-3 text-right font-mono text-slate-800 font-medium">{{
-                                row.totalPeriodDeposit | currency:'INR':'symbol':'1.0-0' }}</div>
-                            <div class="col-span-2 text-right font-mono text-emerald-600">+{{ row.interestEarned |
-                                currency:'INR':'symbol':'1.0-0' }}</div>
-                            <div class="col-span-3 text-right font-mono font-bold text-slate-900">{{ row.closingBalance
-                                | currency:'INR':'symbol':'1.0-0' }}</div>
+
+                    <!-- Table Content -->
+                    <div class="overflow-y-auto flex-1 p-0 scroll-smooth">
+                        <!-- Mobile Card View -->
+                        <div class="md:hidden">
+                            <div *ngFor="let row of masterTable; let i = index"
+                                class="border-b border-slate-100 p-4 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                                [ngClass]="{'bg-amber-50/30': row.isCapped}">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Period</div>
+                                        <div class="text-sm font-bold text-slate-800 mt-0.5">{{ row.periodLabel }}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-xs font-bold text-slate-500 uppercase">Closing Balance</div>
+                                        <div class="text-base font-bold text-slate-900 mt-0.5 font-mono">
+                                            {{ row.closingBalance | currency:'INR':'symbol':'1.0-0' }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-3 text-xs">
+                                    <div>
+                                        <div class="text-[10px] font-medium text-slate-400 uppercase">Monthly</div>
+                                        <div class="font-mono text-slate-700 mt-1">
+                                            {{ row.monthlyInstallment | currency:'INR':'symbol':'1.0-0' }}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] font-medium text-slate-400 uppercase">Deposit</div>
+                                        <div class="font-mono text-slate-800 font-medium mt-1">
+                                            {{ row.totalPeriodDeposit | currency:'INR':'symbol':'1.0-0' }}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] font-medium text-slate-400 uppercase">Interest</div>
+                                        <div class="font-mono text-emerald-600 mt-1">
+                                            +{{ row.interestEarned | currency:'INR':'symbol':'1.0-0' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Desktop Table View -->
+                        <div class="hidden md:block">
+                            <div *ngFor="let row of masterTable"
+                                class="grid grid-cols-12 gap-4 px-4 sm:px-6 py-3 border-b border-slate-50 text-xs md:text-sm items-center hover:bg-slate-50"
+                                [ngClass]="{'bg-amber-50/40': row.isCapped}">
+                                <div class="col-span-2 font-medium text-slate-700">{{ row.periodLabel }}</div>
+                                <div class="col-span-2 text-right font-mono text-slate-600">{{ row.monthlyInstallment |
+                                    currency:'INR':'symbol':'1.0-0' }}</div>
+                                <div class="col-span-3 text-right font-mono text-slate-800 font-medium">{{
+                                    row.totalPeriodDeposit | currency:'INR':'symbol':'1.0-0' }}</div>
+                                <div class="col-span-2 text-right font-mono text-emerald-600">+{{ row.interestEarned |
+                                    currency:'INR':'symbol':'1.0-0' }}</div>
+                                <div class="col-span-3 text-right font-mono font-bold text-slate-900">{{
+                                    row.closingBalance
+                                    | currency:'INR':'symbol':'1.0-0' }}</div>
+                            </div>
+                        </div>
+
                         <div class="h-10"></div>
                     </div>
                 </div>
