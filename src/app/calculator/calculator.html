@@ -49,17 +49,17 @@
     <aside [class.translate-x-0]="isMobileSidebarOpen" [class.-translate-x-full]="!isMobileSidebarOpen"
         class="fixed lg:sticky top-0 left-0 w-full sm:w-96 lg:w-96 bg-white dark:bg-slate-900 shadow-xl z-40 flex flex-col h-screen overflow-y-auto border-r border-slate-200 dark:border-slate-700 no-print transition-all duration-300 ease-in-out lg:translate-x-0"
         [attr.aria-hidden]="!isMobileSidebarOpen && 'true'">
-        <div class="p-6 bg-slate-900 dark:bg-slate-950 text-white shadow-lg relative overflow-hidden transition-colors">
+        <div class="p-4 bg-slate-900 dark:bg-slate-950 text-white shadow-lg relative overflow-hidden transition-colors">
             <div
                 class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none">
             </div>
             <div class="flex items-start justify-between relative z-10">
                 <div class="flex-1">
                     <h1
-                        class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                        class="text-lg font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
                         PPF Calculator
                     </h1>
-                    <p class="text-slate-400 dark:text-slate-500 text-xs mt-1">Govt. Rules Compliant (7.1%)</p>
+                    <p class="text-slate-400 dark:text-slate-500 text-[10px] mt-0.5">Govt. Rules Compliant (7.1%)</p>
                 </div>
                 <!-- Theme Toggle (Desktop) -->
                 <button (click)="themeService.toggleTheme()"
@@ -82,10 +82,10 @@
             </div>
         </div>
 
-        <div class="p-6 space-y-6 flex-1">
+        <div class="p-4 space-y-4 flex-1">
 
             <!-- Basics -->
-            <div class="space-y-4">
+            <div class="space-y-3">
                 <label
                     class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Investment
                     Plan</label>
@@ -127,13 +127,13 @@
             </div>
 
             <!-- Step Up Config -->
-            <div class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+            <div class="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-700">
                 <label
                     class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Step-Up
                     Logic</label>
 
                 <div
-                    class="bg-indigo-50/50 dark:bg-indigo-950/30 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900 space-y-4">
+                    class="bg-indigo-50/50 dark:bg-indigo-950/30 p-3 rounded-xl border border-indigo-100 dark:border-indigo-900 space-y-3">
                     <div class="space-y-1">
                         <label class="text-xs font-medium text-indigo-900 dark:text-indigo-300">Step-Up
                             Percentage</label>
@@ -195,8 +195,8 @@
     <!-- Main Dashboard -->
     <main
         class="flex-1 overflow-hidden relative flex flex-col min-h-screen lg:h-screen bg-slate-50 dark:bg-slate-950 transition-colors">
-        <div class="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-8 scroll-smooth safe-area-bottom">
-            <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+        <div class="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 scroll-smooth safe-area-bottom">
+            <div class="max-w-7xl mx-auto space-y-3 sm:space-y-4">
 
                 <!-- Summary Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
