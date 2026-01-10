@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PpfCalculatorService, PpfYearlyBreakdown } from './ppf-calculator.service';
 import { ExportService } from './export.service';
 import { PrintDataService } from '../print-data.service';
+import { ThemeService } from '../theme.service';
 
 interface ComparisonRow {
   percent: number;
@@ -21,6 +22,7 @@ export class Calculator {
   private ppfService = inject(PpfCalculatorService);
   private exportService = inject(ExportService);
   private printDataService = inject(PrintDataService);
+  protected themeService = inject(ThemeService);
 
   // 1. Inputs
   startAmount: number = 1000;
