@@ -86,60 +86,68 @@
 
             <!-- Basics -->
             <div class="space-y-4">
-                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Investment Plan</label>
+                <label
+                    class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Investment
+                    Plan</label>
 
                 <div class="space-y-2">
-                    <label class="text-xs font-medium text-slate-700">Starting Amount (Monthly)</label>
+                    <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Starting Amount
+                        (Monthly)</label>
                     <div class="relative group">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold">₹</span>
+                        <span
+                            class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 font-bold">₹</span>
                         <input type="number" [ngModel]="startAmount" (input)="onAmountInput($event)" (blur)="onBlur()"
                             (keydown.enter)="onBlur()" min="500" max="12500"
-                            class="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 transition-all font-semibold text-slate-700">
+                            class="w-full pl-8 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600 transition-all font-semibold text-slate-700 dark:text-slate-200">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div class="space-y-1">
-                        <label class="text-xs font-medium text-slate-700">Start Month</label>
+                        <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Start Month</label>
                         <select [(ngModel)]="startMonth" (ngModelChange)="calculate()"
-                            class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium">
+                            class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-200">
                             <option *ngFor="let m of months" [value]="m.val">{{ m.name | slice:0:3 }}</option>
                         </select>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-xs font-medium text-slate-700">Start Year</label>
+                        <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Start Year</label>
                         <select [(ngModel)]="startYear" (ngModelChange)="calculate()"
-                            class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium">
+                            class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-200">
                             <option *ngFor="let y of years" [value]="y">{{ y }}</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="space-y-1">
-                    <label class="text-xs font-medium text-slate-700">Total Duration (Years)</label>
+                    <label class="text-xs font-medium text-slate-700 dark:text-slate-300">Total Duration (Years)</label>
                     <input type="number" [(ngModel)]="durationYears" (ngModelChange)="updateDuration()"
-                        class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg font-semibold text-slate-700 text-sm">
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-semibold text-slate-700 dark:text-slate-200 text-sm focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600">
                 </div>
             </div>
 
             <!-- Step Up Config -->
-            <div class="space-y-4 pt-4 border-t border-slate-100">
-                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Step-Up Logic</label>
+            <div class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                <label
+                    class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Step-Up
+                    Logic</label>
 
-                <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 space-y-4">
+                <div
+                    class="bg-indigo-50/50 dark:bg-indigo-950/30 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900 space-y-4">
                     <div class="space-y-1">
-                        <label class="text-xs font-medium text-indigo-900">Step-Up Percentage</label>
+                        <label class="text-xs font-medium text-indigo-900 dark:text-indigo-300">Step-Up
+                            Percentage</label>
                         <select [(ngModel)]="stepUpPercent" (ngModelChange)="calculate()"
-                            class="w-full p-2 bg-white border border-indigo-200 rounded-lg text-sm font-bold text-indigo-700">
+                            class="w-full p-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-800 rounded-lg text-sm font-bold text-indigo-700 dark:text-indigo-400">
                             <option [value]="0">0% (Flat)</option>
                             <option *ngFor="let p of stepUpOptions" [value]="p">{{ p }}%</option>
                         </select>
                     </div>
 
                     <div class="space-y-1" *ngIf="stepUpPercent > 0">
-                        <label class="text-xs font-medium text-indigo-900">Frequency</label>
+                        <label class="text-xs font-medium text-indigo-900 dark:text-indigo-300">Frequency</label>
                         <select [(ngModel)]="stepUpFrequencyMonths" (ngModelChange)="calculate()"
-                            class="w-full p-2 bg-white border border-indigo-200 rounded-lg text-xs font-bold text-indigo-700">
+                            class="w-full p-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-800 rounded-lg text-xs font-bold text-indigo-700 dark:text-indigo-400">
                             <option *ngFor="let opt of stepUpFrequencyOptions" [value]="opt.val">
                                 {{ opt.label }}
                             </option>
@@ -147,7 +155,7 @@
                     </div>
                 </div>
                 <!-- User requested specific note -->
-                <p class="text-[10px] text-slate-400 mt-2">
+                <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-2">
                     Min: <b>₹500</b> | Max: <b>₹12,500</b> (Monthly)
                 </p>
             </div>

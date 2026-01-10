@@ -157,6 +157,21 @@
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
     }
+
+    /* Select dropdown styling for dark mode */
+    select {
+        color: inherit;
+    }
+
+    select option {
+        background-color: white;
+        color: #1e293b;
+    }
+
+    .dark select option {
+        background-color: #1e293b;
+        color: #f1f5f9;
+    }
 }
 
 /* ============================================
