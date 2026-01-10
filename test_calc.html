@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test</title>
+</head>
+
+<body>
+    <h1>Test Results</h1>
+    <div id="out"></div>
+    <script>
+        const PPF_RATE = 7.1;
+        function calc(amt, freq) {
+            let bal = 0, records = [];
+            for (let m = 0; m < 24; m++) {
+                bal += amt;
+                if ((m + 1) % freq === 0) {
+                    records.push({ m: m + 1, bal: Math.round(bal) });
+                }
+            }
+            return records;
+        }
+        const r = calc(1000, 3);
+        document.getElementById('out').innerHTML = JSON.stringify(r);
+        console.log(r);
+    </script>
+</body>
+
+</html>

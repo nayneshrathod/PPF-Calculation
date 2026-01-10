@@ -1,0 +1,94 @@
+<div class="preview-overlay" *ngIf="data()">
+    <div class="preview-toolbar no-print">
+        <button (click)="closePreview()" class="close-btn">
+            &larr; Back to Calculator
+        </button>
+        <button (click)="printReport()" class="print-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            Final Print / Save as PDF
+        </button>
+    </div>
+
+    <!-- The Actual Document -->
+    <div class="a4-container">
+        <div class="report-header">
+            <div class="header-content">
+                <h1>PPF Investment Projection Report</h1>
+                <p>Government Rules Compliant (7.1%)</p>
+                <span class="date-tag">Generated: {{ today | date:'mediumDate' }}</span>
+            </div>
+        </div>
+
+        <div class="report-body">
+            <!-- Summary Cards -->
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <span class="label">Total Invested</span>
+                    <span class="value">₹{{ formatCurrency(data()?.summary?.totalInvested || 0) }}</span>
+                </div>
+                <div class="summary-card highlight-green">
+                    <span class="label">Interest Accrued</span>
+                    <span class="value">+ ₹{{ formatCurrency(data()?.summary?.totalInterest || 0) }}</span>
+                </div>
+                <div class="summary-card">
+                    <span class="label">Maturity Value</span>
+                    <span class="value">₹{{ formatCurrency(data()?.summary?.maturity || 0) }}</span>
+                </div>
+            </div>
+
+            <!-- Configuration Info -->
+            <div class="config-section">
+                <h3>Calculation Parameters</h3>
+                <div class="config-grid">
+                    <div class="config-item">
+                        <strong>Monthly Deposit:</strong> ₹{{ formatCurrency(data()?.inputs?.startAmount || 0) }}
+                    </div>
+                    <div class="config-item">
+                        <strong>Start Period:</strong> {{ data()?.inputs?.startMonth }} {{ data()?.inputs?.startYear }}
+                    </div>
+                    <div class="config-item">
+                        <strong>Duration:</strong> {{ data()?.inputs?.duration }} Years
+                    </div>
+                    <div class="config-item">
+                        <strong>Step-Up Logic:</strong> {{ data()?.inputs?.stepUp }}% every {{
+                        data()?.inputs?.stepUpFreq }} Months
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-section">
+                <h3>Investment Schedule</h3>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th class="text-right">Monthly Inst.</th>
+                            <th class="text-right">Period Deposit</th>
+                            <th class="text-right">Interest Earned</th>
+                            <th class="text-right">Closing Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of data()?.masterTable">
+                            <td>{{ row.periodLabel }}</td>
+                            <td class="text-right">₹{{ formatCurrency(row.monthlyInstallment) }}</td>
+                            <td class="text-right">₹{{ formatCurrency(row.totalPeriodDeposit) }}</td>
+                            <td class="text-right interest-col">₹{{ formatCurrency(row.interestEarned) }}</td>
+                            <td class="text-right font-bold">₹{{ formatCurrency(row.closingBalance) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="disclaimer">
+                <p>* This is an estimates projection based on current PPF interest rates (7.1%). Actual returns may vary
+                    if government rates change.</p>
+            </div>
+        </div>
+    </div>
+</div>

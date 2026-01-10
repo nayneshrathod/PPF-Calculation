@@ -1,0 +1,216 @@
+.preview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f8fafc;
+    z-index: 9999;
+    overflow-y: auto;
+}
+
+.preview-toolbar {
+    position: sticky;
+    top: 0;
+    background: #1e293b;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.close-btn {
+    background: transparent;
+    color: #cbd5e1;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.print-btn {
+    background: #10b981;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.6rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.print-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* A4 Page Simulation */
+.a4-container {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 2rem auto;
+    background: white;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    color: #1e293b;
+}
+
+.report-header {
+    border-bottom: 4px solid #065f46;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.header-content h1 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #065f46;
+}
+
+.header-content p {
+    color: #059669;
+    font-weight: 600;
+    margin-top: 0.2rem;
+}
+
+.date-tag {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.summary-card {
+    border: 1px solid #e2e8f0;
+    padding: 1.2rem;
+    border-radius: 0.8rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.summary-card .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.summary-card .value {
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+.highlight-green .value {
+    color: #059669;
+}
+
+.config-section {
+    background: #f1f5f9;
+    padding: 1.5rem;
+    border-radius: 0.8rem;
+    margin-bottom: 2rem;
+}
+
+.config-section h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #334155;
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+}
+
+.table-section h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #1e293b;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.report-table th {
+    background: #065f46;
+    color: white;
+    padding: 0.8rem;
+    text-align: left;
+    font-size: 0.85rem;
+}
+
+.report-table td {
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.85rem;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.interest-col {
+    color: #059669;
+    font-weight: 600;
+}
+
+.disclaimer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px dashed #cbd5e1;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+/* Print Rules */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .preview-overlay {
+        position: static;
+        background: transparent;
+        overflow: visible;
+    }
+
+    .a4-container {
+        margin: 0;
+        box-shadow: none;
+        width: 100%;
+        padding: 0;
+    }
+
+    body {
+        background: white;
+    }
+}
