@@ -401,77 +401,175 @@
                     <div class="overflow-y-auto flex-1 p-0 scroll-smooth">
                         <!-- Mobile Card View -->
                         <div class="md:hidden">
-                            @for (row of masterTable; track row.periodLabel; let i = $index) {
-                            <div class="border-b border-slate-100 dark:border-slate-700 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 active:bg-slate-100 dark:active:bg-slate-600 transition-colors"
-                                [ngClass]="{'bg-amber-50/30 dark:bg-amber-900/20': row.isCapped}">
-                                <div class="flex justify-between items-start mb-3">
-                                    <div>
-                                        <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
-                                            Period</div>
-                                        <div class="text-sm font-bold text-slate-800 dark:text-slate-200 mt-0.5">{{
-                                            row.periodLabel }}</div>
+                            @for (group of masterTable; track group.summary.yearIndex; let i = $index) {
+                            <div class="border-b border-slate-100 dark:border-slate-700 transition-colors">
+                                <!-- Year Header (Clickable) -->
+                                <div (click)="toggleAccordion(i)"
+                                    class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800 active:bg-slate-100 dark:active:bg-slate-700 cursor-pointer select-none"
+                                    [ngClass]="{'bg-amber-50/30 dark:bg-amber-900/20': group.summary.isCapped}">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div class="flex items-center gap-2">
+                                            <!-- Chevron -->
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="h-4 w-4 text-slate-400 transition-transform duration-200"
+                                                [class.rotate-180]="group.isOpen" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                            <div>
+                                                <div
+                                                    class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
+                                                    Period</div>
+                                                <div
+                                                    class="text-sm font-bold text-slate-800 dark:text-slate-200 mt-0.5">
+                                                    {{ group.summary.periodLabel }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
+                                                Maturity Value</div>
+                                            <div
+                                                class="text-base font-bold text-slate-900 dark:text-slate-50 mt-0.5 font-mono">
+                                                {{ group.summary.closingBalance | currency:'INR':'symbol':'1.0-0' }}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="text-right">
-                                        <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
-                                            Maturity Value</div>
-                                        <div
-                                            class="text-base font-bold text-slate-900 dark:text-slate-50 mt-0.5 font-mono">
-                                            {{ row.closingBalance | currency:'INR':'symbol':'1.0-0' }}
+                                    <!-- Summary Stats -->
+                                    <div class="grid grid-cols-3 gap-3 text-xs pl-6">
+                                        <div>
+                                            <div
+                                                class="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase">
+                                                Deposited</div>
+                                            <div class="font-mono text-slate-800 dark:text-slate-200 font-medium mt-1">
+                                                {{ group.summary.totalPeriodDeposit | currency:'INR':'symbol':'1.0-0' }}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase">
+                                                Total Inv.</div>
+                                            <div class="font-mono text-slate-800 dark:text-slate-200 font-medium mt-1">
+                                                {{ group.summary.cumulativeDeposit | currency:'INR':'symbol':'1.0-0' }}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase">
+                                                Interest</div>
+                                            <div class="font-mono text-emerald-600 dark:text-emerald-400 mt-1">
+                                                + {{ group.summary.interestEarned | currency:'INR':'symbol':'1.0-0' }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="grid grid-cols-3 gap-3 text-xs">
-                                    <div>
-                                        <div
-                                            class="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase">
-                                            Monthly</div>
-                                        <div class="font-mono text-slate-700 dark:text-slate-300 mt-1">
-                                            {{ row.monthlyInstallment | currency:'INR':'symbol':'1.0-0' }}
+
+                                <!-- Accordion Body (Months) -->
+                                @if (group.isOpen) {
+                                <div
+                                    class="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-800">
+                                    @for (month of group.months; track month.periodLabel) {
+                                    <div
+                                        class="p-3 pl-8 border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-xs font-medium text-slate-600 dark:text-slate-400 w-24">{{
+                                                month.periodLabel.split('(')[0] }}</span>
+                                            <!-- Clean Label: "Month 1" -->
+
+                                            <div class="grid grid-cols-3 gap-2 flex-1 text-right">
+                                                <span class="text-[10px] font-mono text-slate-500">{{
+                                                    month.monthlyInstallment | currency:'INR':'symbol':'1.0-0' }}</span>
+                                                <span class="text-[10px] font-mono text-emerald-600">+{{
+                                                    month.interestEarned | currency:'INR':'symbol':'1.0-0' }}</span>
+                                                <span
+                                                    class="text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300">{{
+                                                    month.closingBalance | currency:'INR':'symbol':'1.0-0' }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <div
-                                            class="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase">
-                                            Total Invested</div>
-                                        <div class="font-mono text-slate-800 dark:text-slate-200 font-medium mt-1">
-                                            {{ row.cumulativeDeposit | currency:'INR':'symbol':'1.0-0' }}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div
-                                            class="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase">
-                                            Interest Earned (Cum.)</div>
-                                        <div class="font-mono text-emerald-600 dark:text-emerald-400 mt-1">
-                                            + {{row.cumulativeInterest | currency:'INR':'symbol':'1.0-0' }}
-                                        </div>
-                                    </div>
+                                    }
                                 </div>
+                                }
                             </div>
                             }
                         </div>
 
                         <!-- Desktop Table View -->
                         <div class="hidden md:block">
-                            @for (row of masterTable; track row.periodLabel) {
-                            <div class="grid grid-cols-12 gap-4 px-4 sm:px-6 py-3 border-b border-slate-50 dark:border-slate-700 text-xs md:text-sm items-center hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-                                [ngClass]="{'bg-amber-50/40 dark:bg-amber-900/20': row.isCapped}">
-                                <div class="col-span-2 font-medium text-slate-700 dark:text-slate-300">{{
-                                    row.periodLabel }}</div>
-                                <div class="col-span-2 text-right font-mono text-slate-600 dark:text-slate-400">{{
-                                    row.monthlyInstallment |
-                                    currency:'INR':'symbol':'1.0-0' }}</div>
+                            @for (group of masterTable; track group.summary.yearIndex; let i = $index) {
+                            <div class="border-b border-slate-50 dark:border-slate-700 transition-colors">
+                                <!-- Year Row -->
+                                <div (click)="toggleAccordion(i)"
+                                    class="grid grid-cols-12 gap-4 px-4 sm:px-6 py-3 items-center hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer select-none"
+                                    [ngClass]="{'bg-amber-50/40 dark:bg-amber-900/20': group.summary.isCapped}">
+
+                                    <!-- Period Column with Chevron -->
+                                    <div
+                                        class="col-span-2 flex items-center gap-2 font-bold text-slate-700 dark:text-slate-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="h-4 w-4 text-slate-400 transition-transform duration-200"
+                                            [class.rotate-180]="group.isOpen" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                        {{ group.summary.periodLabel }}
+                                    </div>
+
+                                    <!-- Monthly Inst (Yearly Avg or total? Summary implies total period deposit is more useful, but col header says 'Monthly Inst') -->
+                                    <!-- Let's show specific values -->
+                                    <div class="col-span-2 text-right font-mono text-slate-600 dark:text-slate-400">
+                                        <!-- Show Total Deposit for Year instead of Monthly Inst for summary line? -->
+                                        <!-- Header says "Monthly Inst." -->
+                                        <!-- If Step up, it varies. Let's show Range or Last? -->
+                                        <!-- Stick to Monthly Installment of last month as reference -->
+                                        {{ group.summary.monthlyInstallment | currency:'INR':'symbol':'1.0-0' }}
+                                    </div>
+
+                                    <div
+                                        class="col-span-3 text-right font-mono text-slate-800 dark:text-slate-200 font-medium">
+                                        {{ group.summary.cumulativeDeposit | currency:'INR':'symbol':'1.0-0' }}
+                                        <span class="text-[10px] text-slate-400 font-normal block hidden lg:inline">(+{{
+                                            group.summary.totalPeriodDeposit | currency:'INR':'symbol':'1.0-0' }} this
+                                            yr)</span>
+                                    </div>
+                                    <div class="col-span-2 text-right font-mono text-emerald-600 dark:text-emerald-400">
+                                        +{{ group.summary.interestEarned | currency:'INR':'symbol':'1.0-0' }}
+                                    </div>
+                                    <div
+                                        class="col-span-3 text-right font-mono font-bold text-slate-900 dark:text-slate-50">
+                                        {{ group.summary.closingBalance | currency:'INR':'symbol':'1.0-0' }}
+                                    </div>
+                                </div>
+
+                                <!-- Accordion Body (Months) -->
+                                @if (group.isOpen) {
                                 <div
-                                    class="col-span-3 text-right font-mono text-slate-800 dark:text-slate-200 font-medium">
-                                    {{
-                                    row.totalPeriodDeposit | currency:'INR':'symbol':'1.0-0' }}</div>
-                                <div class="col-span-2 text-right font-mono text-emerald-600 dark:text-emerald-400">+{{
-                                    row.interestEarned |
-                                    currency:'INR':'symbol':'1.0-0' }}</div>
-                                <div
-                                    class="col-span-3 text-right font-mono font-bold text-slate-900 dark:text-slate-50">
-                                    {{
-                                    row.closingBalance
-                                    | currency:'INR':'symbol':'1.0-0' }}</div>
+                                    class="bg-slate-50 dark:bg-slate-900/30 border-t border-slate-100 dark:border-slate-800 shadow-inner">
+                                    @for (month of group.months; track month.periodLabel) {
+                                    <div
+                                        class="grid grid-cols-12 gap-4 px-4 sm:px-6 py-2 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors">
+                                        <div
+                                            class="col-span-2 pl-8 flex items-center border-l-2 border-indigo-100 dark:border-slate-700 ml-1">
+                                            {{ month.periodLabel }}
+                                        </div>
+                                        <div class="col-span-2 text-right font-mono">
+                                            {{ month.monthlyInstallment | currency:'INR':'symbol':'1.0-0' }}
+                                        </div>
+                                        <div class="col-span-3 text-right font-mono">
+                                            {{ month.cumulativeDeposit | currency:'INR':'symbol':'1.0-0' }}
+                                        </div>
+                                        <div
+                                            class="col-span-2 text-right font-mono text-emerald-600/80 dark:text-emerald-400/80">
+                                            +{{ month.interestEarned | currency:'INR':'symbol':'1.0-0' }}
+                                        </div>
+                                        <div class="col-span-3 text-right font-mono font-medium">
+                                            {{ month.closingBalance | currency:'INR':'symbol':'1.0-0' }}
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                                }
                             </div>
                             }
                         </div>

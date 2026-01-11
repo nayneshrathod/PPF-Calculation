@@ -34,7 +34,7 @@ export class Calculator {
   stepUpFrequencyMonths: number = 12;
 
   // 2. Outputs
-  masterTable: PpfYearlyBreakdown[] = [];
+  masterTable: { summary: PpfYearlyBreakdown; months: PpfYearlyBreakdown[]; isOpen: boolean }[] = [];
   comparisonTable: ComparisonRow[] = [];
 
   // Summary Card Vars
@@ -154,33 +154,71 @@ export class Calculator {
     this.isComparisonOpen.update(v => !v);
   }
 
-  toggleViewMode() {
-    this.isMonthlyView.update(v => !v);
-    this.calculate();
-  }
+
 
   calculate() {
     this.validateInputs();
-    this.masterTable = this.ppfService.calculateDetailedBreakdown(
+
+    // Always fetch monthly data to build the accordion structure
+    const rawData = this.ppfService.calculateDetailedBreakdown(
       this.startAmount,
       this.startMonth,
       this.startYear,
       this.durationYears,
       this.stepUpPercent,
       this.stepUpFrequencyMonths,
-      this.isMonthlyView() ? 'monthly' : 'match_frequency'
+      'monthly'
     );
 
-    // Summary
+    // Group by Year Index
+    const grouped: { [key: number]: PpfYearlyBreakdown[] } = {};
+    rawData.forEach(record => {
+      if (!grouped[record.yearIndex]) grouped[record.yearIndex] = [];
+      grouped[record.yearIndex].push(record);
+    });
+
+    this.masterTable = Object.values(grouped).map((monthRecords, index) => {
+      const lastRecord = monthRecords[monthRecords.length - 1];
+
+      // Calculate Previous Year's Cumulative values to derive "Year Period" totals
+      let prevCumDep = 0;
+      let prevCumInt = 0;
+
+      // Use the rawData array to find the record immediately preceding this year's block
+      const firstRecordIndex = rawData.indexOf(monthRecords[0]);
+      if (firstRecordIndex > 0) {
+        prevCumDep = rawData[firstRecordIndex - 1].cumulativeDeposit;
+        prevCumInt = rawData[firstRecordIndex - 1].cumulativeInterest;
+      }
+
+      // Create Summary Record
+      const summaryRecord: PpfYearlyBreakdown = {
+        ...lastRecord,
+        periodLabel: `Year ${lastRecord.yearIndex}`,
+        // Use the difference in Cumulative Deposit to get EXACT deposit for this year
+        totalPeriodDeposit: lastRecord.cumulativeDeposit - prevCumDep,
+        // Use difference in Cumulative Interest to get EXACT interest earned this year
+        interestEarned: lastRecord.cumulativeInterest - prevCumInt,
+        // closingBalance is naturally the closing balance of the year (last record)
+      };
+
+      return {
+        summary: summaryRecord,
+        months: monthRecords,
+        isOpen: this.isMonthlyView() // Default state matches view mode
+      };
+    });
+
+    // Update Totals
     if (this.masterTable.length > 0) {
-      const lastRec = this.masterTable[this.masterTable.length - 1];
-      this.finalMaturity = lastRec.closingBalance;
-      this.totalInvested = this.masterTable.reduce((sum, row) => sum + row.totalPeriodDeposit, 0);
-      this.totalInterest = this.finalMaturity - this.totalInvested;
+      const finalGroup = this.masterTable[this.masterTable.length - 1];
+      this.totalInvested = finalGroup.summary.cumulativeDeposit;
+      this.totalInterest = finalGroup.summary.cumulativeInterest;
+      this.finalMaturity = finalGroup.summary.closingBalance;
     } else {
-      this.finalMaturity = 0;
       this.totalInvested = 0;
       this.totalInterest = 0;
+      this.finalMaturity = 0;
     }
 
     // Comparison Table
@@ -191,17 +229,35 @@ export class Calculator {
         this.startYear,
         this.durationYears,
         p,
-        this.stepUpFrequencyMonths
+        this.stepUpFrequencyMonths,
+        'yearly'
       );
       const maturity = rows.length > 0 ? rows[rows.length - 1].closingBalance : 0;
       return { percent: p, maturity: maturity };
     });
   }
 
+  toggleViewMode() {
+    this.isMonthlyView.update(v => !v);
+    const newState = this.isMonthlyView();
+    if (this.masterTable) {
+      this.masterTable.forEach(g => g.isOpen = newState);
+    }
+  }
+
+  toggleAccordion(index: number) {
+    if (this.masterTable && this.masterTable[index]) {
+      this.masterTable[index].isOpen = !this.masterTable[index].isOpen;
+    }
+  }
+
   openPrintPreview() {
     const monthName = this.months.find(m => m.val == this.startMonth)?.name || 'Apr';
+    // Flatten grouped data for print (or send as is if print handles it? Assuming print expects flat)
+    const flatData = this.masterTable.flatMap(g => g.months);
+
     this.printDataService.setData({
-      masterTable: this.masterTable,
+      masterTable: flatData,
       summary: {
         totalInvested: this.totalInvested,
         totalInterest: this.totalInterest,
@@ -220,8 +276,10 @@ export class Calculator {
 
   downloadExcel() {
     const monthName = this.months.find(m => m.val == this.startMonth)?.name || 'Apr';
+    const flatData = this.masterTable.flatMap(g => g.months);
+
     this.exportService.exportToExcel(
-      this.masterTable,
+      flatData,
       {
         totalInvested: this.totalInvested,
         totalInterest: this.totalInterest,
