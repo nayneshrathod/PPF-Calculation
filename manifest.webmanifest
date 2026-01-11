@@ -5,8 +5,8 @@
     "theme_color": "#0f172a",
     "background_color": "#f8fafc",
     "display": "standalone",
-    "scope": "/",
-    "start_url": "/",
+    "scope": "/PPF-Calculation/",
+    "start_url": "/PPF-Calculation/",
     "orientation": "portrait-primary",
     "icons": [
         {
