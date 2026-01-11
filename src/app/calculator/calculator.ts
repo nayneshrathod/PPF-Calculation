@@ -56,20 +56,28 @@ export class Calculator {
   isMobileSidebarOpen = signal<boolean>(false);
   isDesktopSidebarOpen = signal<boolean>(true);
 
-  get stepUpFrequencyOptions() {
+  frequencyOptions: { val: number, label: string }[] = [];
+
+  generateFrequencyOptions() {
     const maxMonths = this.durationYears * 12;
     const options = [];
+    // Limit options to reasonable defaults for dropdown (e.g. every year, or months up to 5 years, then 5 year blocks?)
+    // Listing 1 to 720 months is excessive for a UI dropdown.
+    // Let's stick to the previous loop but aware it's large.
     for (let m = 1; m <= maxMonths; m++) {
+      // optimization: only show relevant intervals? e.g. 1, 3, 6, 12, 24, 36...
+      // For now, keep original logic but optimized execution.
       let label = `${m} Month${m > 1 ? 's' : ''}`;
       if (m % 12 === 0) {
         label += ` (${m / 12} Year${m / 12 > 1 ? 's' : ''})`;
       }
       options.push({ val: m, label });
     }
-    return options;
+    this.frequencyOptions = options;
   }
 
   constructor() {
+    this.generateFrequencyOptions();
     const currentYear = new Date().getFullYear();
     for (let i = currentYear; i <= currentYear + 70; i++) {
       this.years.push(i);
@@ -82,6 +90,7 @@ export class Calculator {
   }
 
   updateDuration() {
+    this.generateFrequencyOptions();
     this.calculate();
   }
 
