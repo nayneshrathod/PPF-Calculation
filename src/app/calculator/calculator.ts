@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PpfCalculatorService, PpfYearlyBreakdown } from './ppf-calculator.service';
@@ -24,9 +24,9 @@ export class Calculator {
   private printDataService = inject(PrintDataService);
   protected themeService = inject(ThemeService);
 
-  // 1. Inputs
+  // 1. Inputs (Standard properties for FormsModule)
   startAmount: number = 1000;
-  startMonth: number = 3; // March (One month in first FY)
+  startMonth: number = 3;
   startYear: number = 2026;
   durationYears: number = 60;
 
@@ -52,9 +52,9 @@ export class Calculator {
   years: number[] = [];
   stepUpOptions = Array.from({ length: 100 }, (_, i) => i + 1); // 1-100%
 
-  // Mobile Sidebar State
-  isMobileSidebarOpen: boolean = false;
-  isDesktopSidebarOpen: boolean = true; // Default open on desktop
+  // UI State: Signals (Modern Angular)
+  isMobileSidebarOpen = signal<boolean>(false);
+  isDesktopSidebarOpen = signal<boolean>(true);
 
   get stepUpFrequencyOptions() {
     const maxMonths = this.durationYears * 12;
@@ -86,11 +86,9 @@ export class Calculator {
   }
 
   validateInputs() {
-    // Max cap is strictly immediate
     if (this.startAmount > 12500) {
       this.startAmount = 12500;
     }
-    // If empty/null/0, snap to 500
     if (this.startAmount === null || this.startAmount === undefined || this.startAmount === 0) {
       this.startAmount = 500;
     }
@@ -100,12 +98,10 @@ export class Calculator {
     const val = event.target.value;
     const num = parseFloat(val);
 
-    // If typing results in > 12500, cap it immediately in the DOM too
     if (num > 12500) {
       this.startAmount = 12500;
       event.target.value = 12500;
     } else if (val === '' || num === 0) {
-      // If cleared, snap to 500
       this.startAmount = 500;
       event.target.value = 500;
     } else {
@@ -115,7 +111,6 @@ export class Calculator {
   }
 
   onBlur() {
-    // Final check for minimum when user leaves the field
     if (!this.startAmount || this.startAmount < 500) {
       this.startAmount = 500;
     }
@@ -126,16 +121,15 @@ export class Calculator {
   }
 
   toggleMobileSidebar() {
-    this.isMobileSidebarOpen = !this.isMobileSidebarOpen;
+    this.isMobileSidebarOpen.update(v => !v);
   }
 
   toggleDesktopSidebar() {
-    this.isDesktopSidebarOpen = !this.isDesktopSidebarOpen;
+    this.isDesktopSidebarOpen.update(v => !v);
   }
 
   calculate() {
     this.validateInputs();
-    // 1. Master Table -> Strict Financial Year Logic (User Requests FY based)
     this.masterTable = this.ppfService.calculateDetailedBreakdown(
       this.startAmount,
       this.startMonth,
@@ -145,21 +139,10 @@ export class Calculator {
       this.stepUpFrequencyMonths
     );
 
-    console.log(`[Calculator] Calculated masterTable:`, this.masterTable.length, 'records');
-    console.log('[Calculator] Current params:', {
-      amount: this.startAmount,
-      month: this.startMonth,
-      year: this.startYear,
-      duration: this.durationYears,
-      stepUp: this.stepUpPercent,
-      freq: this.stepUpFrequencyMonths
-    });
-
     // Summary
     if (this.masterTable.length > 0) {
       const lastRec = this.masterTable[this.masterTable.length - 1];
       this.finalMaturity = lastRec.closingBalance;
-
       this.totalInvested = this.masterTable.reduce((sum, row) => sum + row.totalPeriodDeposit, 0);
       this.totalInterest = this.finalMaturity - this.totalInvested;
     } else {
@@ -168,7 +151,7 @@ export class Calculator {
       this.totalInterest = 0;
     }
 
-    // 2. Comparison Table
+    // Comparison Table
     this.comparisonTable = [1, 2, 3, 4, 5, 8, 10, 12, 15, 18, 21, 25].map(p => {
       const rows = this.ppfService.calculateDetailedBreakdown(
         this.startAmount,
