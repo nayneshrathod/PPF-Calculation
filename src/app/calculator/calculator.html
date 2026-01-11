@@ -1,4 +1,4 @@
-<div class="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-900 font-sans transition-colors">
+<div class="flex flex-col lg:flex-row min-h-screen bg-slate-50 dark:bg-slate-900 font-sans transition-colors">
 
     <!-- Mobile Header (visible only on mobile) -->
     <header
@@ -219,7 +219,7 @@
         <div class="flex-1 overflow-y-auto p-2 sm:p-3 lg:p-4 scroll-smooth safe-area-bottom">
             <div class="max-w-7xl mx-auto space-y-2 sm:space-y-3">
                 <!-- Desktop Open Sidebar Trigger -->
-                <button (click)="toggleDesktopSidebar()" [class.hidden]="isDesktopSidebarOpen || isMobileSidebarOpen"
+                <button (click)="toggleDesktopSidebar()" *ngIf="!isDesktopSidebarOpen"
                     class="hidden lg:flex w-fit items-center gap-2 px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 rounded-lg shadow-sm text-xs font-semibold hover:text-emerald-500 hover:border-emerald-200 transition-all mb-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
