@@ -87,8 +87,8 @@ export class Calculator {
     this.startMonth = currentMonth;
     this.startYear = currentYear;
 
-    // Generate years from 1990 to Current + 50
-    for (let i = 1990; i <= currentYear + 50; i++) {
+    // Generate years from 1949 to Current + 70
+    for (let i = 1949; i <= currentYear + 70; i++) {
       this.years.push(i);
     }
     this.calculate();
