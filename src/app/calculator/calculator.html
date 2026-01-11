@@ -127,7 +127,7 @@
                             <select [(ngModel)]="startMonth" (ngModelChange)="calculate()"
                                 class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-200">
                                 @for (m of months; track m.val) {
-                                <option [value]="m.val">{{ m.name | slice:0:3 }}</option>
+                                <option [ngValue]="m.val">{{ m.name | slice:0:3 }}</option>
                                 }
                             </select>
                         </div>
@@ -136,7 +136,7 @@
                             <select [(ngModel)]="startYear" (ngModelChange)="calculate()"
                                 class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-200">
                                 @for (y of years; track y) {
-                                <option [value]="y">{{ y }}</option>
+                                <option [ngValue]="y">{{ y }}</option>
                                 }
                             </select>
                         </div>
@@ -163,9 +163,9 @@
                                 Percentage</label>
                             <select [(ngModel)]="stepUpPercent" (ngModelChange)="calculate()"
                                 class="w-full p-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-800 rounded-lg text-sm font-bold text-indigo-700 dark:text-indigo-400">
-                                <option [value]="0">0% (Flat)</option>
+                                <option [ngValue]="0">0% (Flat)</option>
                                 @for (p of stepUpOptions; track p) {
-                                <option [value]="p">{{ p }}%</option>
+                                <option [ngValue]="p">{{ p }}%</option>
                                 }
                             </select>
                         </div>
@@ -176,7 +176,7 @@
                             <select [(ngModel)]="stepUpFrequencyMonths" (ngModelChange)="calculate()"
                                 class="w-full p-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-800 rounded-lg text-xs font-bold text-indigo-700 dark:text-indigo-400">
                                 @for (opt of frequencyOptions; track opt.val) {
-                                <option [value]="opt.val">{{ opt.label }}</option>
+                                <option [ngValue]="opt.val">{{ opt.label }}</option>
                                 }
                             </select>
                         </div>
