@@ -391,9 +391,9 @@
                         class="hidden md:grid grid-cols-12 gap-4 px-4 sm:px-6 py-3 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                         <div class="col-span-2">Period</div>
                         <div class="col-span-2 text-right">Monthly Inst.</div>
-                        <div class="col-span-3 text-right">Period Deposit</div>
-                        <div class="col-span-2 text-right">Interest</div>
-                        <div class="col-span-3 text-right">Closing Balance</div>
+                        <div class="col-span-3 text-right">Total Invested</div>
+                        <div class="col-span-2 text-right">Total Interest</div>
+                        <div class="col-span-3 text-right">Maturity Value</div>
                     </div>
 
                     <!-- Table Content -->
@@ -412,7 +412,7 @@
                                     </div>
                                     <div class="text-right">
                                         <div class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
-                                            Closing Balance</div>
+                                            Maturity Value</div>
                                         <div
                                             class="text-base font-bold text-slate-900 dark:text-slate-50 mt-0.5 font-mono">
                                             {{ row.closingBalance | currency:'INR':'symbol':'1.0-0' }}
@@ -431,17 +431,17 @@
                                     <div>
                                         <div
                                             class="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase">
-                                            Deposit</div>
+                                            Total Invested</div>
                                         <div class="font-mono text-slate-800 dark:text-slate-200 font-medium mt-1">
-                                            {{ row.totalPeriodDeposit | currency:'INR':'symbol':'1.0-0' }}
+                                            {{ row.cumulativeDeposit | currency:'INR':'symbol':'1.0-0' }}
                                         </div>
                                     </div>
                                     <div>
                                         <div
                                             class="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase">
-                                            Interest</div>
+                                            Interest Earned (Cum.)</div>
                                         <div class="font-mono text-emerald-600 dark:text-emerald-400 mt-1">
-                                            + {{row.interestEarned | currency:'INR':'symbol':'1.0-0' }}
+                                            + {{row.cumulativeInterest | currency:'INR':'symbol':'1.0-0' }}
                                         </div>
                                     </div>
                                 </div>

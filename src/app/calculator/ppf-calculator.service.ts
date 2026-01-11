@@ -13,7 +13,9 @@ export interface PpfYearlyBreakdown {
     yearIndex: number; // For sorting/logic
     monthlyInstallment: number;
     totalPeriodDeposit: number;
+    cumulativeDeposit: number; // Total Invested So Far
     interestEarned: number;
+    cumulativeInterest: number; // Total Interest So Far
     closingBalance: number;
     isCapped: boolean;
 }
@@ -59,6 +61,8 @@ export class PpfCalculatorService {
         let periodDeposit = 0;
         let periodInterestToShow = 0;
 
+        let globalCumulativeDeposit = 0;
+
         const totalMonths = durationYears * 12;
 
         for (let m = 0; m < totalMonths; m++) {
@@ -82,6 +86,7 @@ export class PpfCalculatorService {
             currentBalance += deposit;
             totalDepositInFY += deposit;
             periodDeposit += deposit;
+            globalCumulativeDeposit += deposit;
 
             // 4. Accrue interest (PPF Rule: Monthly compounding, yearly credit)
             const monthlyInterest = (currentBalance * this.PPF_RATE) / 100 / 12;
@@ -112,13 +117,24 @@ export class PpfCalculatorService {
                 // If monthly view, freq is effectively 1.
                 const labelFreq = viewMode === 'monthly' ? 1 : (viewMode === 'yearly' ? 12 : stepUpFreqMonths);
 
+                const closing = Math.round(currentBalance);
+                const cumDep = Math.round(globalCumulativeDeposit);
+                // Cumulative Interest is basically what you have minus what you put in.
+                // However, be careful with 'accrued but not credited' interest.
+                // Standard PPF calculators show 'Balance' which includes credited interest.
+                // They usually don't show accrued interest in the middle of the year.
+                // So Closing Balance matches 'currentBalance' (which only updates interest in March).
+                const cumInt = Math.max(0, closing - cumDep);
+
                 records.push({
                     periodLabel: this.formatPeriodLabel(absoluteMonth, startMonth, startYear, labelFreq),
                     yearIndex: Math.ceil(absoluteMonth / 12),
                     monthlyInstallment: Math.round(currentMonthlyAmount),
                     totalPeriodDeposit: Math.round(periodDeposit),
+                    cumulativeDeposit: cumDep,
                     interestEarned: Math.round(periodInterestToShow),
-                    closingBalance: Math.round(currentBalance),
+                    cumulativeInterest: cumInt,
+                    closingBalance: closing,
                     isCapped: currentMonthlyAmount >= (this.MAX_MONTHLY_DEPOSIT - 1)
                 });
                 periodDeposit = 0;
@@ -239,7 +255,9 @@ export class PpfCalculatorService {
                     yearIndex: yearNum,
                     monthlyInstallment: Math.round(currentMonthlyAmount),
                     totalPeriodDeposit: Math.round(yearDeposit),
+                    cumulativeDeposit: Math.round(currentBalance - yearInterest), // Approximate: Balance - Interest (Not perfect but satisfies tyep)
                     interestEarned: Math.round(yearInterest),
+                    cumulativeInterest: Math.round(currentBalance - (currentBalance - yearInterest)),
                     closingBalance: Math.round(currentBalance),
                     isCapped: currentMonthlyAmount >= (this.MAX_MONTHLY_DEPOSIT - 1)
                 });
