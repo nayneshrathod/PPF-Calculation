@@ -81,7 +81,14 @@ export class Calculator {
   constructor() {
     this.generateFrequencyOptions();
     const currentYear = new Date().getFullYear();
-    for (let i = currentYear; i <= currentYear + 70; i++) {
+    const currentMonth = new Date().getMonth() + 1; // 1-12
+
+    // Set defaults to current date
+    this.startMonth = currentMonth;
+    this.startYear = currentYear;
+
+    // Generate years from 1990 to Current + 50
+    for (let i = 1990; i <= currentYear + 50; i++) {
       this.years.push(i);
     }
     this.calculate();
