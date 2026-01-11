@@ -365,9 +365,24 @@
                             <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 sm:hidden">Swipe for more
                                 details</p>
                         </div>
-                        <div
-                            class="px-2 sm:px-3 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs font-bold rounded-full border border-amber-100 dark:border-amber-800">
-                            ₹1.5L Annual Limit
+                        <div class="flex items-center gap-2">
+                            <button (click)="toggleViewMode()"
+                                class="text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full border transition-colors cursor-pointer select-none"
+                                [class.bg-indigo-50]="isMonthlyView()" [class.text-indigo-700]="isMonthlyView()"
+                                [class.border-indigo-200]="isMonthlyView()"
+                                [class.dark:bg-indigo-900/30]="isMonthlyView()"
+                                [class.dark:text-indigo-300]="isMonthlyView()"
+                                [class.dark:border-indigo-800]="isMonthlyView()" [class.bg-white]="!isMonthlyView()"
+                                [class.text-slate-500]="!isMonthlyView()" [class.border-slate-200]="!isMonthlyView()"
+                                [class.dark:bg-slate-800]="!isMonthlyView()"
+                                [class.dark:text-slate-400]="!isMonthlyView()"
+                                [class.dark:border-slate-600]="!isMonthlyView()">
+                                {{ isMonthlyView() ? 'Monthly View' : 'Yearly View' }}
+                            </button>
+                            <div
+                                class="px-2 sm:px-3 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-[10px] sm:text-xs font-bold rounded-full border border-amber-100 dark:border-amber-800 whitespace-nowrap">
+                                ₹1.5L Limit
+                            </div>
                         </div>
                     </div>
 

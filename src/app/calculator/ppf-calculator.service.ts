@@ -40,7 +40,8 @@ export class PpfCalculatorService {
         startYear: number,
         durationYears: number,
         stepUpPercent: number,
-        stepUpFreqMonths: number = 12
+        stepUpFreqMonths: number = 12,
+        viewMode: 'monthly' | 'yearly' | 'match_frequency' = 'match_frequency'
     ): PpfYearlyBreakdown[] {
         if (startAmount < 1) startAmount = 1;
 
@@ -88,17 +89,31 @@ export class PpfCalculatorService {
             periodInterestToShow += monthlyInterest;
 
             // 5. Check if it's the end of Financial Year (March)
-            // Note: startMonth is 1-based.
             if (currentMonthObj.month === 3) {
                 currentBalance += totalInterestAccruedInYear;
                 totalInterestAccruedInYear = 0;
                 totalDepositInFY = 0;
             }
 
-            // 6. Push period record
-            if (absoluteMonth % stepUpFreqMonths === 0 || m === totalMonths - 1) {
+            // 6. Push period record logic
+            let shouldPush = false;
+            if (m === totalMonths - 1) { // Always push last record
+                shouldPush = true;
+            } else if (viewMode === 'monthly') {
+                shouldPush = true;
+            } else if (viewMode === 'yearly') {
+                if (absoluteMonth % 12 === 0) shouldPush = true;
+            } else { // match_frequency
+                if (absoluteMonth % stepUpFreqMonths === 0) shouldPush = true;
+            }
+
+            if (shouldPush) {
+                // Determine label format based on frequency being saved
+                // If monthly view, freq is effectively 1.
+                const labelFreq = viewMode === 'monthly' ? 1 : (viewMode === 'yearly' ? 12 : stepUpFreqMonths);
+
                 records.push({
-                    periodLabel: this.formatPeriodLabel(absoluteMonth, startMonth, startYear, stepUpFreqMonths),
+                    periodLabel: this.formatPeriodLabel(absoluteMonth, startMonth, startYear, labelFreq),
                     yearIndex: Math.ceil(absoluteMonth / 12),
                     monthlyInstallment: Math.round(currentMonthlyAmount),
                     totalPeriodDeposit: Math.round(periodDeposit),

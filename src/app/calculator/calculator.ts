@@ -56,6 +56,7 @@ export class Calculator {
   isMobileSidebarOpen = signal<boolean>(false);
   isDesktopSidebarOpen = signal<boolean>(true);
   isComparisonOpen = signal<boolean>(true); // Default open
+  isMonthlyView = signal<boolean>(false); // Toggle for Monthly/Yearly breakdown
 
   frequencyOptions: { val: number, label: string }[] = [];
 
@@ -142,6 +143,11 @@ export class Calculator {
     this.isComparisonOpen.update(v => !v);
   }
 
+  toggleViewMode() {
+    this.isMonthlyView.update(v => !v);
+    this.calculate();
+  }
+
   calculate() {
     this.validateInputs();
     this.masterTable = this.ppfService.calculateDetailedBreakdown(
@@ -150,7 +156,8 @@ export class Calculator {
       this.startYear,
       this.durationYears,
       this.stepUpPercent,
-      this.stepUpFrequencyMonths
+      this.stepUpFrequencyMonths,
+      this.isMonthlyView() ? 'monthly' : 'match_frequency'
     );
 
     // Summary
