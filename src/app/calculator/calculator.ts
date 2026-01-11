@@ -55,6 +55,7 @@ export class Calculator {
   // UI State: Signals (Modern Angular)
   isMobileSidebarOpen = signal<boolean>(false);
   isDesktopSidebarOpen = signal<boolean>(true);
+  isComparisonOpen = signal<boolean>(true); // Default open
 
   frequencyOptions: { val: number, label: string }[] = [];
 
@@ -135,6 +136,10 @@ export class Calculator {
 
   toggleDesktopSidebar() {
     this.isDesktopSidebarOpen.update(v => !v);
+  }
+
+  toggleComparison() {
+    this.isComparisonOpen.update(v => !v);
   }
 
   calculate() {
