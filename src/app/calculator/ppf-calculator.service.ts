@@ -25,7 +25,7 @@ export interface PpfYearlyBreakdown {
 })
 export class PpfCalculatorService {
 
-    private readonly PPF_RATE = 7.1;
+    public readonly PPF_RATE = 7.1;
     private readonly MAX_ANNUAL_DEPOSIT = 150000;
     private readonly MAX_MONTHLY_DEPOSIT = 12500; // 150000 / 12
 

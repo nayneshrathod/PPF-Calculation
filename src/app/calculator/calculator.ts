@@ -131,6 +131,10 @@ export class Calculator {
     this.calculate();
   }
 
+  get currentPpfRate() {
+    return this.ppfService.PPF_RATE;
+  }
+
   toggleMobileSidebar() {
     this.isMobileSidebarOpen.update(v => !v);
   }
